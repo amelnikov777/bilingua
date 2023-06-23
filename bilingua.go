@@ -11,10 +11,12 @@ import (
 
 var ReadSlice []string
 var Filesave string
+var CurrentString []byte
 
 func main() {
 	fmt.Println("Перед переводом сохранить txt файл из word в кодировке Юникод UTF-8 без разрывов строк.")
 	ReadSlice = make([]string, 0)
+	CurrentString = make([]byte, 0)
 
 	ReadFile()
 	Translate()
@@ -27,18 +29,36 @@ func ReadFile() { //This function reads user txt file and writes it to ReadSlice
 	filename = strings.Trim(filename, "\r\n")
 	f, err := os.Open(filename)
 	BiFilename := strings.Split(filename, ".")
+	var array []string
 	if err == nil {
 		fmt.Println(" " + filename + " -> " + BiFilename[0] + "_bi." + BiFilename[1])
 		readdata := bufio.NewScanner(f)
+
 		for readdata.Scan() {
-			Read := strings.Split(readdata.Text(), ".")
-			for _, readapeend := range Read {
-				if len(readapeend) > 3 {
-					ReadSlice = append(ReadSlice, readapeend+".")
+			array = append(array, readdata.Text())
+		}
+
+		for _, arrayslice := range array {
+			for I := 0; I < len(arrayslice)-1; I++ {
+				checkI := (arrayslice[I])
+				checkI1 := (arrayslice[I+1])
+				if checkI == '.' || checkI == '!' || checkI == '?' || checkI == ';' {
+					if (checkI1 == ' ' && (arrayslice[I-2]) != '.') || (checkI1 == ' ' && (arrayslice[I-1]) == '.') {
+						CurrentString = append(CurrentString, arrayslice[I])
+						ReadSlice = append(ReadSlice, string(CurrentString))
+						CurrentString = make([]byte, 0)
+					} else {
+						CurrentString = append(CurrentString, arrayslice[I])
+					}
 				} else {
-					ReadSlice = append(ReadSlice, readapeend)
+					CurrentString = append(CurrentString, arrayslice[I])
+				}
+				if I == len(arrayslice)-2 {
+					CurrentString = append(CurrentString, arrayslice[I+1])
 				}
 			}
+			ReadSlice = append(ReadSlice, string(CurrentString))
+			CurrentString = make([]byte, 0)
 		}
 	} else {
 		fmt.Println("File open error! Please check the filename. " + filename)
