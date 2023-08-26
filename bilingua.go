@@ -45,7 +45,6 @@ func ReadFile() { //This function reads user txt file and writes it to ReadSlice
 				checkI := (arrayslice[I])
 				checkI1 := (arrayslice[I+1])
 				if checkI == '.' || checkI == '!' || checkI == '?' || checkI == ';' {
-					// if (checkI1 == ' ' && arrayslice[I-2] != '.') || (checkI1 == ' ' && arrayslice[I-1] == '.') {
 					if checkI1 == ' ' {
 						CurrentString = append(CurrentString, arrayslice[I])
 						ReadSlice = append(ReadSlice, string(CurrentString))
@@ -91,7 +90,7 @@ func Translate() {
 		// so, translator will detect language
 		if len(ii) > 3 {
 			result, _ := gt.Translate(ii, "en", "ru")
-			ReadSlice[i] = OutputConstruct(result, ReadSlice[i], OutputSet[0]) + OutputConstruct(result, ReadSlice[i], OutputSet[1]) + OutputConstruct(result, ReadSlice[i], OutputSet[2]) + OutputConstruct(result, ReadSlice[i], OutputSet[3])
+			ReadSlice[i] = OutputConstruct(result, ReadSlice[i], OutputSet[0]) + OutputConstruct(result, ReadSlice[i], OutputSet[1]) + OutputConstruct(result, ReadSlice[i], OutputSet[2]) + OutputConstruct(result, ReadSlice[i], OutputSet[3]) + "\n"
 		}
 		fmt.Printf("\rПереведено: %d", i+1)
 	}
@@ -100,9 +99,9 @@ func Translate() {
 func OutputConstruct(translate, original string, set byte) string {
 	switch set {
 	case 'O':
-		return " " + original + " "
+		return original + " "
 	case 'T':
-		return " [" + translate + "] "
+		return "[ " + translate + " ] "
 	}
 	return ""
 }
